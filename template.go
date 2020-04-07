@@ -282,8 +282,8 @@ on:
       - master
 
 jobs:
-  lintrest:
-    name: lintrest
+  lint:
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.13
@@ -298,11 +298,11 @@ jobs:
       - name: Install dependencies
         run: make tools
 
-      - name: run lintrest
+      - name: run lint
         run: |
           export PATH="$PATH:$HOME/go/bin"
           export GOPATH=$HOME/go
-          GOGC=5 make lintrest
+          GOGC=5 make lint
   tflint:
     name: tflint
     runs-on: ubuntu-latest
@@ -1199,27 +1199,27 @@ The following arguments are supported:
   <% content_for :sidebar do %>
     <div class="docs-sidebar hidden-print affix-top" role="complementary">
       <ul class="nav docs-sidenav">
-        <li<%= sidebar_current("docs-home") %>>
-        <a href="/docs/providers/index.html">All Providers</a>
+        <li>
+          <a href="/docs/providers/index.html">All Providers</a>
         </li>
 
-        <li<%= sidebar_current("docs-{{.ProviderName}}-index") %>>
-        <a href="/docs/providers/index.html">{{title .ProviderName}} Provider</a>
+        <li>
+          <a href="/docs/providers/{{.ProviderName}}/index.html">{{title .ProviderName}} Provider</a>
         </li>
 
-        <li<%= sidebar_current("docs-{{.ProviderName}}-datasource") %>>
+        <li>
           <a href="#">Data Sources</a>
           <ul class="nav nav-visible">
-            <li<%= sidebar_current("docs-{{.ProviderName}}-datasource") %>>
+            <li>
               <a href="/docs/providers/{{.ProviderName}}/d/scaffolding_data_source.html">{{.ProviderName}}_scaffolding_data_source</a>
             </li>
           </ul>
         </li>
 
-        <li<%= sidebar_current("docs-{{.ProviderName}}-resource") %>>
+        <li>
         <a href="#">Resources</a>
         <ul class="nav nav-visible">
-          <li<%= sidebar_current("docs-{{.ProviderName}}-resource") %>>
+          <li>
             <a href="/docs/providers/{{.ProviderName}}/r/scaffolding_resource.html">{{.ProviderName}}_scaffolding_resource</a>
           </li>
         </ul>
