@@ -970,8 +970,9 @@ go 1.14
 			content:	`package main
 
 import (
-	"{{.PkgPath}}/{{.ProviderName}}"
 	"log"
+
+	"{{.PkgPath}}/{{.ProviderName}}"
 
 	"github.com/hashicorp/terraform-plugin-sdk/plugin"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -1105,9 +1106,10 @@ exit 0
 			content:	``,
 		},
 		fileMetaData{
-			path: 		"website/docs/d/{{.ProviderName}}_scaffolding_data_source.html.markdown",
+			path: 		"website/docs/d/scaffolding_data_source.html.markdown",
 			fileMode: 	420,
 			content:	fmt.Sprintf(`---
+subcategory: "Scaffold"
 layout: "{{.ProviderName}}"
 page_title: "{{title .ProviderName}}: {{.ProviderName}}_scaffolding_data_source"
 description: |-
@@ -1137,7 +1139,6 @@ data "{{.ProviderName}}_scaffolding_data_source" "example" {
 			content:	fmt.Sprintf(`---
 layout: "{{.ProviderName}}"
 page_title: "Provider: {{title .ProviderName}}"
-sidebar_current: "docs-scaffolding-index"
 description: |-
   The {{title .ProviderName}} provider is used to TODO.
 ---
@@ -1162,9 +1163,10 @@ resource "{{.ProviderName}}_scaffolding_resource" "example" {
 `, "`"),
 		},
 		fileMetaData{
-			path: 		"website/docs/r/{{.ProviderName}}_scaffolding_resource.html.markdown",
+			path: 		"website/docs/r/scaffolding_resource.html.markdown",
 			fileMode: 	420,
 			content:	fmt.Sprintf(`---
+subcategory: "Scaffold"
 layout: "{{.ProviderName}}"
 page_title: "{{title .ProviderName}}: {{.ProviderName}}_scaffolding_resource"
 description: |-
@@ -1201,24 +1203,24 @@ The following arguments are supported:
         <a href="/docs/providers/index.html">All Providers</a>
         </li>
 
-        <li<%= sidebar_current("docs-scaffolding-index") %>>
+        <li<%= sidebar_current("docs-{{.ProviderName}}-index") %>>
         <a href="/docs/providers/index.html">{{title .ProviderName}} Provider</a>
         </li>
 
-        <li<%= sidebar_current("docs-scaffolding-datasource") %>>
+        <li<%= sidebar_current("docs-{{.ProviderName}}-datasource") %>>
           <a href="#">Data Sources</a>
           <ul class="nav nav-visible">
-            <li<%= sidebar_current("docs-scaffolding-datasource") %>>
-              <a href="/docs/providers/scaffolding/d/{{.ProviderName}}_scaffolding__data_source.html">{{.ProviderName}}_scaffolding_data_source</a>
+            <li<%= sidebar_current("docs-{{.ProviderName}}-datasource") %>>
+              <a href="/docs/providers/{{.ProviderName}}/d/scaffolding_data_source.html">{{.ProviderName}}_scaffolding_data_source</a>
             </li>
           </ul>
         </li>
 
-        <li<%= sidebar_current("docs-scaffolding-resource") %>>
+        <li<%= sidebar_current("docs-{{.ProviderName}}-resource") %>>
         <a href="#">Resources</a>
         <ul class="nav nav-visible">
-          <li<%= sidebar_current("docs-scaffolding-resource") %>>
-            <a href="/docs/providers/scaffolding/r/{{.ProviderName}}_scaffolding_resource.html">{{.ProviderName}}_scaffolding_resource</a>
+          <li<%= sidebar_current("docs-{{.ProviderName}}-resource") %>>
+            <a href="/docs/providers/{{.ProviderName}}/r/scaffolding_resource.html">{{.ProviderName}}_scaffolding_resource</a>
           </li>
         </ul>
         </li>

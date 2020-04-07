@@ -1,7 +1,6 @@
 ---
 layout: "{{.ProviderName}}"
 page_title: "Provider: {{title .ProviderName}}"
-sidebar_current: "docs-scaffolding-index"
 description: |-
   The {{title .ProviderName}} provider is used to TODO.
 ---

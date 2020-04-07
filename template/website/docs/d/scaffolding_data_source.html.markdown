@@ -1,4 +1,5 @@
 ---
+subcategory: "Scaffold"
 layout: "{{.ProviderName}}"
 page_title: "{{title .ProviderName}}: {{.ProviderName}}_scaffolding_data_source"
 description: |-

@@ -5,8 +5,8 @@ on:
       - master
 
 jobs:
-  lintrest:
-    name: lintrest
+  lint:
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.13
@@ -21,11 +21,11 @@ jobs:
       - name: Install dependencies
         run: make tools
 
-      - name: run lintrest
+      - name: run lint
         run: |
           export PATH="$PATH:$HOME/go/bin"
           export GOPATH=$HOME/go
-          GOGC=5 make lintrest
+          GOGC=5 make lint
   tflint:
     name: tflint
     runs-on: ubuntu-latest

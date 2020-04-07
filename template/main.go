@@ -1,8 +1,9 @@
 package main
 
 import (
-	"{{.PkgPath}}/{{.ProviderName}}"
 	"log"
+
+	"{{.PkgPath}}/{{.ProviderName}}"
 
 	"github.com/hashicorp/terraform-plugin-sdk/plugin"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
