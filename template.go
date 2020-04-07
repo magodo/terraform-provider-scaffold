@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strings"
 	"text/template"
 	"path/filepath"
 )
@@ -420,6 +421,45 @@ cmd/server/ver.go
 `,
 		},
 		fileMetaData{
+			path: 		".golangci.yml",
+			fileMode: 	420,
+			content:	`run:
+  deadline: 10m10s
+  modules-download-mode: vendor
+
+issues:
+  max-per-linter: 0
+  max-same-issues: 0
+
+linters:
+  disable-all: true
+  enable:
+    - deadcode
+    - errcheck
+    - gofmt
+    - goimports
+    - gosimple
+    - govet
+    - ineffassign
+    - interfacer
+    - nakedret
+    - misspell
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - unconvert
+    - varcheck
+    - vet
+    - vetshadow
+    - whitespace
+
+linters-settings:
+  errcheck:
+    ignore: github.com/hashicorp/terraform-plugin-sdk/helper/schema:ForceNew|Set,fmt:.*,io:Close
+`,
+		},
+		fileMetaData{
 			path: 		"CHANGELOG.md",
 			fileMode: 	420,
 			content:	`## 0.0.1 (Unreleased)
@@ -456,6 +496,7 @@ tools:
 	GO111MODULE=off go get -u github.com/client9/misspell/cmd/misspell
 	GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 	GO111MODULE=off go get -u github.com/bflad/tfproviderlint/cmd/tfproviderlint
+	GO111MODULE=off go get -u github.com/bflad/tfproviderdocs
 	GO111MODULE=off go get -u github.com/katbyte/terrafmt
 
 build: fmtcheck
@@ -1064,6 +1105,132 @@ exit 0
 			content:	``,
 		},
 		fileMetaData{
+			path: 		"website/docs/d/{{.ProviderName}}_scaffolding_data_source.html.markdown",
+			fileMode: 	420,
+			content:	fmt.Sprintf(`---
+layout: "{{.ProviderName}}"
+page_title: "{{title .ProviderName}}: {{.ProviderName}}_scaffolding_data_source"
+description: |-
+  Sample data source in the Terraform provider scaffolding.
+---
+
+# {{.ProviderName}}_scaffolding_data_source
+
+Sample data source in the Terraform provider scaffolding.
+
+## Example Usage
+
+%[1]s%[1]s%[1]shcl
+data "{{.ProviderName}}_scaffolding_data_source" "example" {
+  sample_attribute = "foo"
+}
+%[1]s%[1]s%[1]s
+
+## Attributes Reference
+
+* %[1]ssample_attribute%[1]s - Sample attribute.
+`, "`"),
+		},
+		fileMetaData{
+			path: 		"website/docs/index.html.markdown",
+			fileMode: 	420,
+			content:	fmt.Sprintf(`---
+layout: "{{.ProviderName}}"
+page_title: "Provider: {{title .ProviderName}}"
+sidebar_current: "docs-scaffolding-index"
+description: |-
+  The {{title .ProviderName}} provider is used to TODO.
+---
+
+# {{title .ProviderName}} Provider
+
+TODO
+
+Use the navigation to the left to read about the available resources.
+
+## Example Usage
+
+%[1]s%[1]s%[1]shcl
+provider "{{.ProviderName}}" {
+}
+
+# Example resource configuration
+resource "{{.ProviderName}}_scaffolding_resource" "example" {
+  # ...
+}
+%[1]s%[1]s%[1]s
+`, "`"),
+		},
+		fileMetaData{
+			path: 		"website/docs/r/{{.ProviderName}}_scaffolding_resource.html.markdown",
+			fileMode: 	420,
+			content:	fmt.Sprintf(`---
+layout: "{{.ProviderName}}"
+page_title: "{{title .ProviderName}}: {{.ProviderName}}_scaffolding_resource"
+description: |-
+  Sample resource in the Terraform provider scaffolding.
+---
+
+# {{.ProviderName}}_scaffolding_resource
+
+Sample resource in the Terraform provider scaffolding.
+
+## Example Usage
+
+%[1]s%[1]s%[1]shcl
+resource "{{.ProviderName}}_scaffolding_resource" "example" {
+  sample_attribute = "foo"
+}
+%[1]s%[1]s%[1]s
+
+## Argument Reference
+
+The following arguments are supported:
+
+* %[1]ssample_attribute%[1]s - Sample attribute.
+`, "`"),
+		},
+		fileMetaData{
+			path: 		"website/{{.ProviderName}}.erb",
+			fileMode: 	420,
+			content:	`<% wrap_layout :inner do %>
+  <% content_for :sidebar do %>
+    <div class="docs-sidebar hidden-print affix-top" role="complementary">
+      <ul class="nav docs-sidenav">
+        <li<%= sidebar_current("docs-home") %>>
+        <a href="/docs/providers/index.html">All Providers</a>
+        </li>
+
+        <li<%= sidebar_current("docs-scaffolding-index") %>>
+        <a href="/docs/providers/index.html">{{title .ProviderName}} Provider</a>
+        </li>
+
+        <li<%= sidebar_current("docs-scaffolding-datasource") %>>
+          <a href="#">Data Sources</a>
+          <ul class="nav nav-visible">
+            <li<%= sidebar_current("docs-scaffolding-datasource") %>>
+              <a href="/docs/providers/scaffolding/d/{{.ProviderName}}_scaffolding__data_source.html">{{.ProviderName}}_scaffolding_data_source</a>
+            </li>
+          </ul>
+        </li>
+
+        <li<%= sidebar_current("docs-scaffolding-resource") %>>
+        <a href="#">Resources</a>
+        <ul class="nav nav-visible">
+          <li<%= sidebar_current("docs-scaffolding-resource") %>>
+            <a href="/docs/providers/scaffolding/r/{{.ProviderName}}_scaffolding_resource.html">{{.ProviderName}}_scaffolding_resource</a>
+          </li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= yield %>
+  <% end %>
+`,
+		},
+		fileMetaData{
 			path: 		"{{.ProviderName}}/internal/provider/provider.go",
 			fileMode: 	420,
 			content:	`package provider
@@ -1119,10 +1286,14 @@ func GenScaffold(outdir string, data interface{}) error {
 		}
 	}
 
+	funcMap := template.FuncMap{
+		"title": strings.Title,
+	}
+
 	// prepare directories
 	for _, di := range templateDirs {
 		var buffer bytes.Buffer
-		pt := template.Must(template.New("").Parse(di.path))
+		pt := template.Must(template.New("").Funcs(funcMap).Parse(di.path))
 		if err := pt.Execute(&buffer, data); err != nil {
 			return err
 		}
@@ -1135,7 +1306,7 @@ func GenScaffold(outdir string, data interface{}) error {
 	// prepare files
 	for _, fi := range templateFiles {
 		var buffer bytes.Buffer
-		pt := template.Must(template.New("").Parse(fi.path))
+		pt := template.Must(template.New("").Funcs(funcMap).Parse(fi.path))
 		if err := pt.Execute(&buffer, data); err != nil {
 			return err
 		}
@@ -1146,7 +1317,7 @@ func GenScaffold(outdir string, data interface{}) error {
 		}
 		defer f.Close()
 
-		t, err := template.New("").Parse(fi.content)
+		t, err := template.New("").Funcs(funcMap).Parse(fi.content)
 		if err != nil {
 			return err
 		}

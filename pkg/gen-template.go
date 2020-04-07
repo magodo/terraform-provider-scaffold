@@ -127,6 +127,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strings"
 	"text/template"
 	"path/filepath"
 )
@@ -171,10 +172,14 @@ func GenScaffold(outdir string, data interface{}) error {
 		}
 	}
 
+	funcMap := template.FuncMap{
+		"title": strings.Title,
+	}
+
 	// prepare directories
 	for _, di := range templateDirs {
 		var buffer bytes.Buffer
-		pt := template.Must(template.New("").Parse(di.path))
+		pt := template.Must(template.New("").Funcs(funcMap).Parse(di.path))
 		if err := pt.Execute(&buffer, data); err != nil {
 			return err
 		}
@@ -187,7 +192,7 @@ func GenScaffold(outdir string, data interface{}) error {
 	// prepare files
 	for _, fi := range templateFiles {
 		var buffer bytes.Buffer
-		pt := template.Must(template.New("").Parse(fi.path))
+		pt := template.Must(template.New("").Funcs(funcMap).Parse(fi.path))
 		if err := pt.Execute(&buffer, data); err != nil {
 			return err
 		}
@@ -198,7 +203,7 @@ func GenScaffold(outdir string, data interface{}) error {
 		}
 		defer f.Close()
 
-		t, err := template.New("").Parse(fi.content)
+		t, err := template.New("").Funcs(funcMap).Parse(fi.content)
 		if err != nil {
 			return err
 		}

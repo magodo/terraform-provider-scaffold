@@ -1,0 +1,35 @@
+<% wrap_layout :inner do %>
+  <% content_for :sidebar do %>
+    <div class="docs-sidebar hidden-print affix-top" role="complementary">
+      <ul class="nav docs-sidenav">
+        <li<%= sidebar_current("docs-home") %>>
+        <a href="/docs/providers/index.html">All Providers</a>
+        </li>
+
+        <li<%= sidebar_current("docs-scaffolding-index") %>>
+        <a href="/docs/providers/index.html">{{title .ProviderName}} Provider</a>
+        </li>
+
+        <li<%= sidebar_current("docs-scaffolding-datasource") %>>
+          <a href="#">Data Sources</a>
+          <ul class="nav nav-visible">
+            <li<%= sidebar_current("docs-scaffolding-datasource") %>>
+              <a href="/docs/providers/scaffolding/d/{{.ProviderName}}_scaffolding__data_source.html">{{.ProviderName}}_scaffolding_data_source</a>
+            </li>
+          </ul>
+        </li>
+
+        <li<%= sidebar_current("docs-scaffolding-resource") %>>
+        <a href="#">Resources</a>
+        <ul class="nav nav-visible">
+          <li<%= sidebar_current("docs-scaffolding-resource") %>>
+            <a href="/docs/providers/scaffolding/r/{{.ProviderName}}_scaffolding_resource.html">{{.ProviderName}}_scaffolding_resource</a>
+          </li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= yield %>
+  <% end %>
