@@ -31,6 +31,10 @@ var (
 			fileMode: 	2147484141,
 		},
 		dirMetaData{
+			path: 		".github/workflows",
+			fileMode: 	2147484141,
+		},
+		dirMetaData{
 			path: 		"scripts",
 			fileMode: 	2147484141,
 		},
@@ -265,6 +269,146 @@ Search open/closed issues before submitting since someone might have asked the s
 Terraform is a mature project with a growing community. There are active, dedicated people willing to help you through various mediums.
 
 Take a look at those mediums listed at https://www.terraform.io/community.html
+`,
+		},
+		fileMetaData{
+			path: 		".github/workflows/provider.yml",
+			fileMode: 	420,
+			content:	`name: Provider
+on: 
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  lintrest:
+    name: lintrest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make tools
+
+      - name: run lintrest
+        run: |
+          export PATH="$PATH:$HOME/go/bin"
+          export GOPATH=$HOME/go
+          GOGC=5 make lintrest
+  tflint:
+    name: tflint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make tools
+
+      - name: run tflint
+        run: |
+          export PATH="$PATH:$HOME/go/bin"
+          export GOPATH=$HOME/go
+          GO111MODULE=off go get -u github.com/hashicorp/terraform
+          make tflint
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make tools
+
+      - name: make test
+        run: |
+          export PATH="$PATH:$HOME/go/bin"
+          export GOPATH=$HOME/go
+          make test
+  depscheck:
+    name: depscheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make tools
+
+      - name: make depscheck
+        run: |
+          export PATH="$PATH:$HOME/go/bin"
+          export GOPATH=$HOME/go
+          make depscheck
+  website-lint:
+    name: website-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make tools
+
+      - name: make website-lint
+        run: |
+          export PATH="$PATH:$HOME/go/bin"
+          export GOPATH=$HOME/go
+          GO111MODULE=off go get -u github.com/hashicorp/terraform
+          make website-lint
+  website-test:
+    name: website-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make tools
+
+      - name: make website-test
+        run: |
+          export PATH="$PATH:$HOME/go/bin"
+          export GOPATH=$HOME/go
+          make website-test
 `,
 		},
 		fileMetaData{
