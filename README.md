@@ -5,7 +5,7 @@ This tool generates terraform provider scaffold, which aligns with hashicorp's [
 # Install
 
 ```go
-GO111MODULE=off go get github.com/magodo/terraform-provider-scaffold
+GO111MODULE=off go get -u github.com/magodo/terraform-provider-scaffold
 ```
 
 # Usage
