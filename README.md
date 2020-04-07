@@ -31,7 +31,7 @@ Example:
 
 > tree
 .
-└── scaffold
+└── terraform-provider-foobar
     ├── CHANGELOG.md
     ├── foobar
     │   ├── internal
@@ -49,9 +49,13 @@ Example:
     │   └── terrafmt-website.sh
     └── website
         ├── allowed-subcategories
-        └── docs
-            ├── d
-            └── r
+        ├── docs
+        │   ├── d
+        │   │   └── scaffolding_data_source.html.markdown
+        │   ├── index.html.markdown
+        │   └── r
+        │       └── scaffolding_resource.html.markdown
+        └── foobar.erb
 
-9 directories, 12 files
+9 directories, 16 files
 ```
