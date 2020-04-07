@@ -2,8 +2,7 @@ TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 TESTTIMEOUT=180m
-PKG_NAME=pkg
-PROVIDER_NAME={{.ProviderName}}
+PKG_NAME={{.ProviderName}}
 
 default: build
 
@@ -69,13 +68,13 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PROVIDER_NAME)
+	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 website-lint:
 	@echo "==> Checking website against linters..."
 	@misspell -error -source=text website/
 	@echo "==> Checking documentation for errors..."
-	@tfproviderdocs check -provider-name=$(PROVIDER_NAME) -require-resource-subcategory \
+	@tfproviderdocs check -provider-name=$(PKG_NAME) -require-resource-subcategory \
 		-allowed-resource-subcategories-file website/allowed-subcategories
 
 terrafmt-lint:
@@ -87,6 +86,6 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PROVIDER_NAME)
+	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 .PHONY: build test testacc vet fmt fmtcheck lint tools test-compile website website-lint website-test

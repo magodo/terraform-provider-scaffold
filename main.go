@@ -33,8 +33,8 @@ func main() {
 	}
 	rootCmd.Flags().StringVarP(&outputDir, "output_dir", "o", "scaffold", "outputdir of project scaffold")
 
-	rootCmd.Flags().StringVarP(&templateValue.ProviderName, "name", "n", "", "name of terraform provider")
-	rootCmd.Flags().StringVarP(&templateValue.PkgPath, "pkg", "p", "", "go packagep= path")
+	rootCmd.Flags().StringVarP(&templateValue.ProviderName, "provider_name", "n", "", "name of terraform provider")
+	rootCmd.Flags().StringVarP(&templateValue.PkgPath, "pkg_path", "p", "", "go package path")
 	templateValue.PkgName = path.Base(templateValue.PkgPath)
 
 	if err := rootCmd.Execute(); err != nil {

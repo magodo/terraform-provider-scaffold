@@ -124,6 +124,7 @@ func init() {
 package {{ .InvokerPackage }}
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"text/template"
@@ -172,7 +173,12 @@ func GenScaffold(outdir string, data interface{}) error {
 
 	// prepare directories
 	for _, di := range templateDirs {
-		dir := filepath.Join(outdir, di.path)
+		var buffer bytes.Buffer
+		pt := template.Must(template.New("").Parse(di.path))
+		if err := pt.Execute(&buffer, data); err != nil {
+			return err
+		}
+		dir := filepath.Join(outdir, buffer.String())
 		if err := os.MkdirAll(dir, di.fileMode); err != nil {
 			return err
 		}
@@ -180,7 +186,12 @@ func GenScaffold(outdir string, data interface{}) error {
 
 	// prepare files
 	for _, fi := range templateFiles {
-		path := filepath.Join(outdir, fi.path)
+		var buffer bytes.Buffer
+		pt := template.Must(template.New("").Parse(fi.path))
+		if err := pt.Execute(&buffer, data); err != nil {
+			return err
+		}
+		path := filepath.Join(outdir, buffer.String())
 		f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, fi.fileMode)
 		if err != nil {
 			return err

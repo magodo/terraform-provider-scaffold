@@ -26,6 +26,6 @@ fi
 
 PROVIDER_URL="https://{{.PkgPath}}/issues"
 
-$SED "s;GH-([0-9]+);\[#\1\]\($PROVIDER_URL\/\1\)/g" -e 's/\[\[#(.+)([0-9])\)]$/(\[#\1\2))/g' CHANGELOG.md
+$SED "s;GH-([0-9]+);\[#\1\]\($PROVIDER_URL\/\1\);g" -e 's/\[\[#(.+)([0-9])\)]$/(\[#\1\2))/g' CHANGELOG.md
 
 rm CHANGELOG.md.bak

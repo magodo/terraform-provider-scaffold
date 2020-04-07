@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"text/template"
@@ -22,7 +23,11 @@ type fileMetaData struct {
 var (
 	templateDirs = []dirMetaData{
 		dirMetaData{
-			path: 		"pkg",
+			path: 		".github",
+			fileMode: 	2147484141,
+		},
+		dirMetaData{
+			path: 		".github/ISSUE_TEMPLATE",
 			fileMode: 	2147484141,
 		},
 		dirMetaData{
@@ -45,9 +50,223 @@ var (
 			path: 		"website/docs/r",
 			fileMode: 	2147484141,
 		},
+		dirMetaData{
+			path: 		"{{.ProviderName}}",
+			fileMode: 	2147484141,
+		},
+		dirMetaData{
+			path: 		"{{.ProviderName}}/internal",
+			fileMode: 	2147484141,
+		},
+		dirMetaData{
+			path: 		"{{.ProviderName}}/internal/provider",
+			fileMode: 	2147484141,
+		},
 	}
 
 	templateFiles = []fileMetaData{
+		fileMetaData{
+			path: 		".github/CODE_OF_CONDUCT.md",
+			fileMode: 	420,
+			content:	`# Code of Conduct
+
+HashiCorp Community Guidelines apply to you when interacting with the community here on GitHub and contributing code.
+
+Please read the full text at https://www.hashicorp.com/community-guidelines
+`,
+		},
+		fileMetaData{
+			path: 		".github/ISSUE_TEMPLATE/Bug_Report.md",
+			fileMode: 	420,
+			content:	fmt.Sprintf(`---
+name: 🐛 Bug Report
+about: If something isn't working as expected 🤔.
+
+---
+
+<!---
+Please note the following potential times when an issue might be in Terraform core:
+
+* [Configuration Language](https://www.terraform.io/docs/configuration/index.html) or resource ordering issues
+* [State](https://www.terraform.io/docs/state/index.html) and [State Backend](https://www.terraform.io/docs/backends/index.html) issues
+* [Provisioner](https://www.terraform.io/docs/provisioners/index.html) issues
+* [Registry](https://registry.terraform.io/) issues
+* Spans resources across multiple providers
+
+If you are running into one of these scenarios, we recommend opening an issue in the [Terraform core repository](https://github.com/hashicorp/terraform/) instead.
+--->
+
+<!--- Please keep this note for the community --->
+
+### Community Note
+
+* Please vote on this issue by adding a 👍 [reaction](https://blog.github.com/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/) to the original issue to help the community and maintainers prioritize this request
+* Please do not leave "+1" or "me too" comments, they generate extra noise for issue followers and do not help prioritize the request
+* If you are interested in working on this issue or have submitted a pull request, please leave a comment
+
+<!--- Thank you for keeping this note for the community --->
+
+### Terraform (and AzureRM Provider) Version
+
+<!--- Please run %[1]sterraform -v%[1]s to show the Terraform core version and provider version(s). If you are not running the latest version of Terraform or the provider, please upgrade because your issue may have already been fixed. [Terraform documentation on provider versioning](https://www.terraform.io/docs/configuration/providers.html#provider-versions). --->
+
+### Affected Resource(s)
+
+<!--- Please list the affected resources and data sources. --->
+
+* %[1]sazurerm_XXXXX%[1]s
+
+### Terraform Configuration Files
+
+<!--- Information about code formatting: https://help.github.com/articles/basic-writing-and-formatting-syntax/#quoting-code --->
+
+%[1]s%[1]s%[1]shcl
+# Copy-paste your Terraform configurations here - for large Terraform configs,
+# please use a service like Dropbox and share a link to the ZIP file. For
+# security, you can also encrypt the files using our GPG public key: https://keybase.io/hashicorp
+%[1]s%[1]s%[1]s
+
+### Debug Output
+
+<!---
+Please provide a link to a GitHub Gist containing the complete debug output. Please do NOT paste the debug output in the issue; just paste a link to the Gist.
+
+To obtain the debug output, see the [Terraform documentation on debugging](https://www.terraform.io/docs/internals/debugging.html).
+--->
+
+### Panic Output
+
+<!--- If Terraform produced a panic, please provide a link to a GitHub Gist containing the output of the %[1]scrash.log%[1]s. --->
+
+### Expected Behavior
+
+<!--- What should have happened? --->
+
+### Actual Behavior
+
+<!--- What actually happened? --->
+
+### Steps to Reproduce
+
+<!--- Please list the steps required to reproduce the issue. --->
+
+1. %[1]sterraform apply%[1]s
+
+### Important Factoids
+
+<!--- Are there anything atypical about your accounts that we should know? For example: Running in a Azure China/Germany/Government? --->
+
+### References
+
+<!---
+Information about referencing Github Issues: https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests
+
+Are there any other GitHub issues (open or closed) or pull requests that should be linked here? Such as vendor documentation?
+--->
+
+* #0000
+`, "`"),
+		},
+		fileMetaData{
+			path: 		".github/ISSUE_TEMPLATE/Feature_Request.md",
+			fileMode: 	420,
+			content:	fmt.Sprintf(`---
+name: 🚀 Feature Request
+about: I have a suggestion (and might want to implement myself 🙂)!
+title: Support for [thing]
+
+---
+
+<!--- Please keep this note for the community --->
+
+### Community Note
+
+* Please vote on this issue by adding a 👍 [reaction](https://blog.github.com/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/) to the original issue to help the community and maintainers prioritize this request
+* Please do not leave "+1" or "me too" comments, they generate extra noise for issue followers and do not help prioritize the request
+* If you are interested in working on this issue or have submitted a pull request, please leave a comment
+
+<!--- Thank you for keeping this note for the community --->
+
+### Description
+
+<!--- Please leave a helpful description of the feature request here. --->
+
+### New or Affected Resource(s)
+
+<!--- Please list the new or affected resources and data sources. --->
+
+* azurerm_XXXXX
+
+### Potential Terraform Configuration
+
+<!--- Information about code formatting: https://help.github.com/articles/basic-writing-and-formatting-syntax/#quoting-code --->
+
+%[1]s%[1]s%[1]shcl
+# Copy-paste your Terraform configurations here - for large Terraform configs,
+# please use a service like Dropbox and share a link to the ZIP file. For
+# security, you can also encrypt the files using our GPG public key.
+%[1]s%[1]s%[1]s
+
+### References
+
+<!---
+Information about referencing Github Issues: https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests
+
+Are there any other GitHub issues (open or closed) or pull requests that should be linked here? Vendor blog posts or documentation? For example:
+
+* https://azure.microsoft.com/en-us/roadmap/virtual-network-service-endpoint-for-azure-cosmos-db/
+--->
+
+* #0000
+`, "`"),
+		},
+		fileMetaData{
+			path: 		".github/ISSUE_TEMPLATE/Question.md",
+			fileMode: 	420,
+			content:	`---
+name: 💬 Question
+about: If you have a question, please check out our other community resources!
+
+---
+
+Issues on GitHub are intended to be related to bugs or feature requests with provider codebase,
+so we recommend using our other community resources instead of asking here 👍.
+
+---
+
+If you have a support request or question please submit them to one of these resources:
+
+* [HashiCorp Community Forums](https://discuss.hashicorp.com/c/terraform-providers)
+* [HashiCorp support](https://support.hashicorp.com) (Terraform Enterprise customers)
+`,
+		},
+		fileMetaData{
+			path: 		".github/ISSUE_TEMPLATE/config.yml",
+			fileMode: 	420,
+			content:	`blank_issues_enabled: false
+`,
+		},
+		fileMetaData{
+			path: 		".github/ISSUE_TEMPLATE.md",
+			fileMode: 	420,
+			content:	`<!---
+Thanks for filing an issue 😄 ! Before you submit, please read the following:
+
+Check the other issue templates if you are trying to submit a bug report, feature request, or question
+Search open/closed issues before submitting since someone might have asked the same thing before!
+-->
+`,
+		},
+		fileMetaData{
+			path: 		".github/SUPPORT.md",
+			fileMode: 	420,
+			content:	`# Support
+
+Terraform is a mature project with a growing community. There are active, dedicated people willing to help you through various mediums.
+
+Take a look at those mediums listed at https://www.terraform.io/community.html
+`,
+		},
 		fileMetaData{
 			path: 		".gitignore",
 			fileMode: 	420,
@@ -85,8 +304,7 @@ BUG FIXES:
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 TESTTIMEOUT=180m
-PKG_NAME=pkg
-PROVIDER_NAME={{.ProviderName}}
+PKG_NAME={{.ProviderName}}
 
 default: build
 
@@ -152,13 +370,13 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PROVIDER_NAME)
+	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 website-lint:
 	@echo "==> Checking website against linters..."
 	@misspell -error -source=text website/
 	@echo "==> Checking documentation for errors..."
-	@tfproviderdocs check -provider-name=$(PROVIDER_NAME) -require-resource-subcategory \
+	@tfproviderdocs check -provider-name=$(PKG_NAME) -require-resource-subcategory \
 		-allowed-resource-subcategories-file website/allowed-subcategories
 
 terrafmt-lint:
@@ -170,7 +388,7 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
-	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PROVIDER_NAME)
+	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 .PHONY: build test testacc vet fmt fmtcheck lint tools test-compile website website-lint website-test
 `,
@@ -567,7 +785,7 @@ go 1.14
 			content:	`package main
 
 import (
-	"{{.PkgPath}}/pkg"
+	"{{.PkgPath}}/{{.ProviderName}}"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/plugin"
@@ -579,36 +797,9 @@ func main() {
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() terraform.ResourceProvider {
-			return pkg.Provider()
+			return {{.ProviderName}}.Provider()
 		},
 	})
-}
-`,
-		},
-		fileMetaData{
-			path: 		"pkg/provider.go",
-			fileMode: 	420,
-			content:	`package pkg
-
-import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-)
-
-func Provider() *schema.Provider {
-	return &schema.Provider{
-		ResourcesMap: map[string]*schema.Resource{
-			// TODO
-		},
-		ConfigureFunc: func(d *schema.ResourceData) (interface{}, error) {
-			return &client{
-				// TODO
-			}, nil
-		},
-	}
-}
-
-type client struct {
-	// TODO
 }
 `,
 		},
@@ -643,7 +834,7 @@ fi
 
 PROVIDER_URL="https://{{.PkgPath}}/issues"
 
-$SED "s;GH-([0-9]+);\[#\1\]\($PROVIDER_URL\/\1\)/g" -e 's/\[\[#(.+)([0-9])\)]$/(\[#\1\2))/g' CHANGELOG.md
+$SED "s;GH-([0-9]+);\[#\1\]\($PROVIDER_URL\/\1\);g" -e 's/\[\[#(.+)([0-9])\)]$/(\[#\1\2))/g' CHANGELOG.md
 
 rm CHANGELOG.md.bak
 `, "`"),
@@ -674,7 +865,7 @@ exit 0`, "`"),
 
 echo "==> Checking acceptance test terraform blocks are formatted..."
 
-files=$(find ./pkg -type f -name "*_test.go")
+files=$(find ./{{.ProviderName}} -type f -name "*_test.go")
 error=false
 
 for f in $files; do
@@ -682,20 +873,6 @@ for f in $files; do
 done
 
 if ${error}; then
-  echo "------------------------------------------------"
-  echo ""
-  echo "The preceding files contain terraform blocks that are not correctly formatted or contain errors."
-  echo "You can fix this by running make tools and then terrafmt on them."
-  echo ""
-  echo "format a single file:"
-  echo "$ terrafmt fmt -f ./{{.ProviderName}}/path/to/_test.go"
-  echo ""
-  echo "format all website files:"
-  echo "$ find pkg | egrep \"_test.go\" | sort | while read f; do terrafmt fmt -f \$f; done"
-  echo ""
-  echo "on windows:"
-  echo "$ Get-ChildItem -Path . -Recurse -Filter \"*_test.go\" | foreach {terrafmt fmt -f $_.fullName}"
-  echo ""
   exit 1
 fi
 
@@ -742,6 +919,51 @@ exit 0
 			fileMode: 	420,
 			content:	``,
 		},
+		fileMetaData{
+			path: 		"{{.ProviderName}}/internal/provider/provider.go",
+			fileMode: 	420,
+			content:	`package provider
+
+import (
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+)
+
+func Provider() terraform.ResourceProvider {
+	p := &schema.Provider{
+		Schema: map[string]*schema.Schema{},
+
+		DataSourcesMap: map[string]*schema.Resource{},
+		ResourcesMap:   map[string]*schema.Resource{},
+	}
+
+	p.ConfigureFunc = providerConfigure(p)
+
+	return p
+}
+
+func providerConfigure(p *schema.Provider) schema.ConfigureFunc {
+	return func(d *schema.ResourceData) (interface{}, error) {
+		return nil, nil
+	}
+}
+`,
+		},
+		fileMetaData{
+			path: 		"{{.ProviderName}}/provider.go",
+			fileMode: 	420,
+			content:	`package {{.ProviderName}}
+
+import (
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"{{.PkgPath}}/{{.ProviderName}}/internal/provider"
+)
+
+func Provider() terraform.ResourceProvider {
+	return provider.Provider()
+}
+`,
+		},
 	}
 )
 
@@ -755,7 +977,12 @@ func GenScaffold(outdir string, data interface{}) error {
 
 	// prepare directories
 	for _, di := range templateDirs {
-		dir := filepath.Join(outdir, di.path)
+		var buffer bytes.Buffer
+		pt := template.Must(template.New("").Parse(di.path))
+		if err := pt.Execute(&buffer, data); err != nil {
+			return err
+		}
+		dir := filepath.Join(outdir, buffer.String())
 		if err := os.MkdirAll(dir, di.fileMode); err != nil {
 			return err
 		}
@@ -763,7 +990,12 @@ func GenScaffold(outdir string, data interface{}) error {
 
 	// prepare files
 	for _, fi := range templateFiles {
-		path := filepath.Join(outdir, fi.path)
+		var buffer bytes.Buffer
+		pt := template.Must(template.New("").Parse(fi.path))
+		if err := pt.Execute(&buffer, data); err != nil {
+			return err
+		}
+		path := filepath.Join(outdir, buffer.String())
 		f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, fi.fileMode)
 		if err != nil {
 			return err

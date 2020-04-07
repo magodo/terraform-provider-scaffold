@@ -1,7 +1,7 @@
 package main
 
 import (
-	"{{.PkgPath}}/pkg"
+	"{{.PkgPath}}/{{.ProviderName}}"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/plugin"
@@ -13,7 +13,7 @@ func main() {
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() terraform.ResourceProvider {
-			return pkg.Provider()
+			return {{.ProviderName}}.Provider()
 		},
 	})
 }
